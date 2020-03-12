@@ -6,11 +6,12 @@ schema = {
     "type" : "object",
     "properties":{
         "IP": {"type" : "string"},
-        "OS": {"type" : "array"},
-        "Services":{"type": "array"},
-        "Software":{"type":"array"}
+        "OS": {"type":["string","array"]},
+        "Services":{"type":["string","array"]},
+        "Software":{"type":["string","array"]},
+        "JA3_Fingerprint":{"type":["string","array"]}
     },
-    "required": ["IP", "OS", "Services"]
+    "required": ["IP"]
 }
 
 def validate_and_add(item,schema,list):
@@ -90,23 +91,44 @@ def software(ips,rutatolog):
         finallist2.append(ipsandos)
     return finallist,finallist2
 
+def ja3reader(ips,rutatolog):
+
+    #Leemos el json de los known_services
+    reader = open(rutatolog, 'r')
+    lines=[]
+    for line in reader:
+        row = json.loads(line)
+        lines.append(row)
+
+    # Para cada una de las lineas, se busca si coincide la IP y se registran los servicios
+    finallist=[]
+    for x in ips:
+
+        ja3list=[]
+        ipandja3=[]
+        for row in lines:
+            if row['id.orig_h'] == str(x):
+                ja3list.append(row['ja3'])
+        #print(ja3list)
+        ipandja3=[x,unique(ja3list)]
+        finallist.append(ipandja3)
+    return finallist
 dir = input("Introduce the base directory where the logs are: ")
-listaips=readips(dir+'/home/javier/Escritorio/prueba2/conn.log')
-listaservicios=knownservices(listaips,dir+'/home/javier/Escritorio/prueba2/known_services.log')
-listasoftware,listasos=software(listaips,dir+'/home/javier/Escritorio/prueba2/software.log')
-print(listasos)
+dir = "/home/javier/Escritorio/prueba3/"
+listaips=readips(dir+'conn.log')
+listaservicios=knownservices(listaips,dir+'known_services.log')
+listasoftware,listasos=software(listaips,dir+'software.log')
+ja3 = ja3reader(listaips,dir+'ssl.log')
 
 network=[]
 for ip in listaips:
     for dev in listasos:
         if dev[0]==ip:
             os=dev[1]
-            print(os)
             if(("Unknown" in dev[1])and (len(dev[1])>1)):
                 os=dev[1].remove("Unknown")
             if(os==None):
                 os=["Unknown"]
-
 
     for dev in listaservicios:
         if dev[0]==ip:
@@ -114,14 +136,17 @@ for ip in listaips:
     for dev in listasoftware:
         if dev[0]==ip:
             software=dev[1]
+    for dev in ja3:
+        if dev[0]==ip:
+            ja3fing=dev[1]
     active={
         "IP":ip,
         "OS":os,
         "Services":services,
-        "Software":software
+        "Software":software,
+        "JA3_Fingeprint":ja3fing
     }
     validate_and_add(active,schema,network)
-
-print(network)
+    print(active)
 
 exit()
