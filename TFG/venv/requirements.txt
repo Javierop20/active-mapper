@@ -1,0 +1,9 @@
+graphviz==0.13.2
+Jinja2==2.11.1
+numpy==1.16.6
+pandas==0.24.2
+pygraphviz==1.5
+pyliblzma==0.5.3
+requests==2.22.0
+scapy==2.4.3
+flask
