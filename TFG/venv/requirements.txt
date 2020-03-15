@@ -7,3 +7,5 @@ pyliblzma==0.5.3
 requests==2.22.0
 scapy==2.4.3
 flask
+json
+jsonschema

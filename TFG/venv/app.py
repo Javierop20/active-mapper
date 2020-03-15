@@ -2,7 +2,6 @@ from flask import Flask, render_template
 from json2html import *
 import json
 import main_functions
-
 app = Flask(__name__, template_folder='.')
 
 @app.route("/")
@@ -22,4 +21,4 @@ def data():
     return render_template('data.json')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
