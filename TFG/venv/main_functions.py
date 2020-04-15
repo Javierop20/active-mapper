@@ -174,7 +174,6 @@ def p0freader(ips,rutatolog):
                             os.append(fields[4].split('=')[1])
                         ipandos=[ip,os]
                         finallist.append(ipandos)
-            print(finallist)
             return finallist
     except OSError as e:
         finallist = []
@@ -240,7 +239,7 @@ for ip in listaips:
         "JA3_Fingeprint":ja3fing
     }
     validate_and_add(active,schema,network)
-    print(active)
+    #print(active)
 writedata(dir,network)
 os.system("cat "+dir+"data.json > "+cwd+"/templates/data.json")
 
