@@ -1,5 +1,26 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="{{ url_for('static', filename='jsonview.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+</head>
 <body>
-<link rel="stylesheet" href="/jsonview.css"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous"><script src="/jsonview.js"></script><script src="/prueba.js"></script>
+    <script src="{{ url_for('static', filename='jsonview.js') }}" type="text/javascript"></script>
+    <div class="root">
+    <script type="text/javascript">
+        fetch('data.json')
+        .then((res)=> {
+          return res.text();
+        })
+        .then((data) => {
+          jsonView.format(data, '.root');
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+
+    </script>
+    </div>
+
 </body>
 </html>

@@ -146,6 +146,45 @@ def ja3reader(ips,rutatolog):
             finallist.append(ipandja3)
         return finallist
 
+def p0freader(ips,rutatolog):
+    try:
+        with open(rutatolog) as reader:
+            finallist=[]
+            for line in reader:
+                fields = line.split('|')
+                if fields[3] =='subj=cli':
+                    os = []
+                    ip=fields[1].split('=')[1].split('/')[0]
+                    if 'os' in fields[4]:
+
+                        if '???' in fields[4]:
+                            os=[]
+                        else:
+                            os.append(fields[4].split('=')[1])
+                        ipandos = [ip, os]
+                        finallist.append(ipandos)
+                if fields[3] == 'subj=srv':
+                    os = []
+                    ip = fields[2].split('=')[1].split('/')[0]
+                    if 'os' in fields[4]:
+                        if '???' in fields[4]:
+                            os = []
+
+                        else:
+                            os.append(fields[4].split('=')[1])
+                        ipandos=[ip,os]
+                        finallist.append(ipandos)
+            print(finallist)
+            return finallist
+    except OSError as e:
+        finallist = []
+        for x in ips:
+            oslist = []
+            ipandos = []
+            ipandos = [x, oslist]
+            finallist.append(ipandos)
+        return finallist
+
 def writedata(rutatolog,data):
     writer=open(rutatolog+"data.json", 'w')
     nlines=0
@@ -168,18 +207,22 @@ os.system("figlet Active-mapper")
 print("Introduce the base directory where the pcap is located: ")
 dir=sys.stdin.readline().strip()
 os.system("export PATH=/usr/local/zeek/bin:$PATH && cd "+dir+" && zeek -Cr "+dir+"*.pcap local")
-os.system("cat "+dir+"data.json > "+cwd+"/data.json")
+os.system("p0f -r "+dir+"*.pcap -o "+dir+"p0f.log > /dev/null")
 
 listaips=readips(dir+'conn.log')
 listaservicios=knownservices(listaips,dir+'known_services.log')
 listasoftware,listasos=software(listaips,dir+'software.log')
 ja3 = ja3reader(listaips,dir+'ssl.log')
+p0f = p0freader(listaips,dir+'p0f.log')
 
 network=[]
 for ip in listaips:
     for dev in listasos:
         if dev[0]==ip:
-            os=unique(dev[1])
+            operative=unique(dev[1])
+    for dev in p0f:
+        if dev[0]==ip:
+            operative=unique(dev[1])
     for dev in listaservicios:
         if dev[0]==ip:
             services=dev[1]
@@ -191,7 +234,7 @@ for ip in listaips:
             ja3fing=dev[1]
     active={
         "IP":ip,
-        "OS":os,
+        "OS":operative,
         "Services":services,
         "Software":software,
         "JA3_Fingeprint":ja3fing
@@ -199,6 +242,7 @@ for ip in listaips:
     validate_and_add(active,schema,network)
     print(active)
 writedata(dir,network)
+os.system("cat "+dir+"data.json > "+cwd+"/templates/data.json")
 
 
 
