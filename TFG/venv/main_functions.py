@@ -1,6 +1,7 @@
 import numpy as np
 import json
 from jsonschema import *
+import requests
 import os
 import sys
 schema = {
@@ -10,7 +11,8 @@ schema = {
         "OS": {"type":["string","array"]},
         "Services":{"type":["string","array"]},
         "Software":{"type":["string","array"]},
-        "JA3_Fingerprint":{"type":["string","array"]}
+        "JA3_Fingerprint":{"type":["string","array"]},
+        "Possible User-Agent":{"type":["string","array"]}
     },
     "required": ["IP"]
 }
@@ -184,6 +186,16 @@ def p0freader(ips,rutatolog):
             finallist.append(ipandos)
         return finallist
 
+def ja3lookup(ja3fing):
+    useragents=[]
+    for user in ja3fing:
+        response = requests.get('https://ja3er.com/search/' + user)
+        listuseragent = response.json()
+        for item in listuseragent:
+            if 'User-Agent' in item:
+                useragents.append(item['User-Agent'])
+    return useragents
+
 def writedata(rutatolog,data):
     writer=open(rutatolog+"data.json", 'w')
     nlines=0
@@ -231,12 +243,18 @@ for ip in listaips:
     for dev in ja3:
         if dev[0]==ip:
             ja3fing=dev[1]
+    for dev in ja3:
+        if dev[0]==ip:
+            ja3fing=dev[1]
+            useragents=ja3lookup(ja3fing)
+
     active={
         "IP":ip,
         "OS":operative,
         "Services":services,
         "Software":software,
-        "JA3_Fingeprint":ja3fing
+        "JA3_Fingeprint":ja3fing,
+        "Possible User-Agent":useragents
     }
     validate_and_add(active,schema,network)
     #print(active)
