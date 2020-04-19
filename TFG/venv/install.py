@@ -13,15 +13,13 @@ os.system("sudo mkdir /opt/zeek/share/zeek/site/ja3/")
 os.system("cd && git clone https://github.com/salesforce/ja3.git")
 os.system("cd && cd ja3/ && sudo cp zeek/* /opt/zeek/share/zeek/site/ja3/")
 os.system("cd && rm -rf ja3/")
-
-os.system("sudo echo @load tuning/json-logs.zeek>>/opt/zeek/share/zeek/site/local.conf")
-os.system("sudo echo @load tuning/track-all-assets>>/opt/zeek/share/zeek/site/local.conf")
-os.system("sudo echo @load ./ja3>>/opt/zeek/share/zeek/site/local.conf")
-
+os.system("cd && echo '@load tuning/json-logs' | sudo tee -a /opt/zeek/share/zeek/site/local.zeek")
+os.system("cd && echo '@load tuning/track-all-assets' | sudo tee -a /opt/zeek/share/zeek/site/local.zeek")
+os.system("cd && echo '@load ./ja3' | sudo tee -a /opt/zeek/share/zeek/site/local.zeek")
 
 os.system("echo Configuring python env...")
-os.system("sudo apt install python-pip -y")
-os.system("cd "+cwd+" && pip install -r requirements.txt")
+os.system("sudo apt install python3-pip -y")
+os.system("cd "+cwd+" && pip3 install -r requirements.txt")
 decision=input("Finished! Do you want to run the program now?[y/n]")
 if decision=='y':
     import app
