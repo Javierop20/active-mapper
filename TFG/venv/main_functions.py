@@ -217,7 +217,7 @@ cwd=os.getcwd()
 os.system("figlet Active-mapper")
 print("Introduce the base directory where the pcap is located: ")
 dir=sys.stdin.readline().strip()
-os.system("export PATH=/usr/local/zeek/bin:$PATH && cd "+dir+" && zeek -Cr "+dir+"*.pcap local")
+os.system("export PATH=/opt/zeek/bin:$PATH && cd "+dir+" && zeek -Cr "+dir+"*.pcap local")
 os.system("p0f -r "+dir+"*.pcap -o "+dir+"p0f.log > /dev/null")
 
 listaips=readips(dir+'conn.log')
