@@ -1,0 +1,11 @@
+title	edge	type
+type	1	string
+label	1	string
+protocol	1	string
+bytes	1	integer
+packages	1	integer
+syns	1	integer
+fins	1	integer
+unfinished	1	integer
+avg	1	integer
+
