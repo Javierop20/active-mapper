@@ -1,7 +1,0 @@
-Jinja2==2.11.1
-numpy==1.16.6
-requests==2.22.0
-scapy==2.4.3
-flask
-jsonschema
-json2html
