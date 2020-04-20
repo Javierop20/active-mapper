@@ -20,12 +20,9 @@ os.system("cd && echo '@load ./ja3' | sudo tee -a /opt/zeek/share/zeek/site/loca
 os.system("echo Configuring python env...")
 os.system("sudo apt install python3-pip -y")
 os.system("cd "+cwd+" && pip3 install -r requirements.txt")
-decision=input("Finished! Do you want to run the program now?[y/n]")
-if decision=='y':
-    import app
-else:
-    exit()
-
+os.system("clear")
+os.system("echo Instalation finished! For running the program you have to write in this console: 'python3 app.py'")
+os.system("echo 'Hope you like it! - Created by Javier Ortega - Universidad de Zaragoza'")
 
 
 
