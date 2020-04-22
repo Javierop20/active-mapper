@@ -45,6 +45,7 @@ def readips(rutatolog):
     for line in reader:
         jsonreader = json.loads(line)
         listahosts.append(jsonreader['id.orig_h'])
+		listahosts.append(jsonreader['id.resp_h'])
     listaips=unique(listahosts)
     return listaips
 
