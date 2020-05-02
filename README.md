@@ -1,4 +1,4 @@
-<img align="center" src="https://github.com/Javierop20/active-mapper/blob/master/images/logo.png">
+<img align="center" src="https://github.com/Javierop20/active-mapper/blob/master/images/logo.PNG">
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 Active-mapper is a tool for creating a CMDB of the actives detected in a PCAP, extract information of them and save them in a JSON Format and show them in a web browser report.
 Also export the PCAP to GEXF for graphical representation of the communication between nodes.
