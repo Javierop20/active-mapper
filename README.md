@@ -1,5 +1,5 @@
 <img align="center" src="https://github.com/Javierop20/active-mapper/blob/master/TFG/images/logo.PNG">
-![license](https://img.shields.io/github/license/mashape/apistatus.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
 Active-mapper is a tool for creating a CMDB of the actives detected in a PCAP, extract information of them and save them in a JSON Format and show them in a web browser report.
