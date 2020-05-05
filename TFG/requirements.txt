@@ -5,3 +5,4 @@ scapy==2.4.3
 flask
 jsonschema
 json2html
+vkbeautify
