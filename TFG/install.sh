@@ -21,8 +21,8 @@ echo '@load ./ja3' | sudo tee -a /opt/zeek/share/zeek/site/local.zeek
 echo Configuring python env...
 sudo apt install python3-pip -y
 cd $dir
-pip3 install -r requirements.txt")
+pip3 install -r requirements.txt
 clear
-echo Instalation finished! For running the program you have to write in this console: 'python3 app.py'
+echo 'Instalation finished! For running the program you have to write in this console: python3 app.py'
 echo 'Hope you like it! - Created by Javier Ortega - Universidad de Zaragoza'
 
