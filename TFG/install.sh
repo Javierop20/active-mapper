@@ -1,6 +1,6 @@
 #!/bin/sh
 echo Welcome to the Active-mapper installation. This will require sudo privileges
-$pwd=$(pwd)
+$dir=$PWD
 echo Installing Zeek and dependencies...
 sudo apt-get install flex bison libpcap-dev libssl-dev python-dev swig zlib1g-dev git figlet -y
 sudo apt-get install -y p0f
@@ -20,7 +20,7 @@ echo '@load tuning/track-all-assets' | sudo tee -a /opt/zeek/share/zeek/site/loc
 echo '@load ./ja3' | sudo tee -a /opt/zeek/share/zeek/site/local.zeek
 echo Configuring python env...
 sudo apt install python3-pip -y
-cd $pwd 
+cd $dir 
 pip3 install -r requirements.txt")
 clear
 echo Instalation finished! For running the program you have to write in this console: 'python3 app.py'
