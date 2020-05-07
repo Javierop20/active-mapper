@@ -7,13 +7,13 @@
 Active-mapper is a tool for creating a CMDB of the actives detected in a PCAP, extract information of them and save them in a JSON Format and show them in a web browser report.
 Also export the PCAP to GEXF for graphical representation of the communication between nodes.
 
-It uses [Bro/Zeek](https://github.com/bro/bro) for the disection, [JA3](https://github.com/salesforce/ja3) for the detection of User-Agents and [p0f](https://github.com/p0f/p0f) for the OS Detection.
+It uses [Bro/Zeek](https://github.com/bro/bro) for the disection, [JA3](https://github.com/salesforce/ja3) for the detection of User-Agents, [p0f](https://github.com/p0f/p0f) for the OS Detection, [brassfork](https://github.com/mikkolehtisalo/brassfork) for the creation of nodes from PCAP and [CSVtoGEXF](https://github.com/oerpli/CSVtoGEXF) for creating the GEPHI graph.
 
-Active-mapper is meant to be used in Ubuntu environments or in WSL of Windows. Developed by Javier Ortega for the final thesis in Telecommunications Engineering of the Universidad de Zaragoza.
+Active-mapper is meant to be used in Ubuntu environments. It can be used in Debian 9, 10 and CentOS if you install Zeek manually. Developed by Javier Ortega for the final thesis in Telecommunications Engineering of the Universidad de Zaragoza.
 
 ### Features
 - Support of multitude of protocols
-- Quick creation of reports
+- Quick creation of reports in HTML
 - JSON Output
 - GEXF Representation of the nodes and edges
 
