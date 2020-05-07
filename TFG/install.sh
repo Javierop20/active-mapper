@@ -1,6 +1,6 @@
 #!/bin/sh
 echo Welcome to the Active-mapper installation. This will require sudo privileges
-$dir=$PWD
+dir=$PWD
 echo Installing Zeek and dependencies...
 sudo apt-get install flex bison libpcap-dev libssl-dev python-dev swig zlib1g-dev git figlet -y
 sudo apt-get install -y p0f
