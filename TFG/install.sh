@@ -3,7 +3,7 @@ echo Welcome to the Active-mapper installation. This will require sudo privilege
 dir=$PWD
 echo Installing Zeek and dependencies...
 sudo apt-get install wget p0f flex bison libpcap-dev libssl-dev python-dev swig zlib1g-dev git figlet -y
-sudo sh -c 'echo deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/ / > /etc/apt/sources.list.d/security:zeek.list'
+sudo sh -c "echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_18.10/ /' > /etc/apt/sources.list.d/security:zeek.list"
 wget -nv https://download.opensuse.org/repositories/security:zeek/xUbuntu_18.10/Release.key -O Release.key
 sudo apt-key add - < Release.key
 sudo apt-get update
