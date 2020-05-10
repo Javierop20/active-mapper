@@ -138,8 +138,10 @@ def ja3reader(ips,rutatolog):
             ja3list=[]
             ipandja3=[]
             for row in lines:
-                if row['id.orig_h'] == str(x):
+                if row['id.orig_h'] == str(x) and row['established']==True:
                     ja3list.append(row['ja3'])
+                if row['id.resp_h']== str(x) and row['established']==True:
+                    ja3list.append(row['ja3s'])
             #print(ja3list)
             ipandja3=[x,unique(ja3list)]
             finallist.append(ipandja3)
