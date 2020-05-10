@@ -29,7 +29,7 @@ git clone https://github.com/Javierop20/active-mapper.git
 
 ```buildoutcfg
 cd active-mapper/TFG/
-python3 install.sh
+./install.sh
 ```
 
 3. Exectute the tool
