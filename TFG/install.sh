@@ -13,6 +13,7 @@ cd && git clone https://github.com/salesforce/ja3.git
 cd ja3/
 sudo cp zeek/* /opt/zeek/share/zeek/site/ja3/
 cd
+sudo chmod +x brassfork
 rm -rf ja3/
 echo '@load tuning/json-logs' | sudo tee -a /opt/zeek/share/zeek/site/local.zeek
 echo '@load tuning/track-all-assets' | sudo tee -a /opt/zeek/share/zeek/site/local.zeek
