@@ -23,7 +23,7 @@ RUN sudo sh /home/ubuntu/install.sh
 RUN pip3 install -r /home/ubuntu/requirements.txt
 
 RUN sudo chmod +x /home/ubuntu/brassfork && \
-	chown -R /home/ubuntu/
+	chown -R /home/ubuntu/ ubuntu:ubuntu
 EXPOSE 5000
 
 ENTRYPOINT ["/bin/bash"]
