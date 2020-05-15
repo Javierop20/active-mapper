@@ -4,6 +4,7 @@ from jsonschema import *
 import requests
 import os
 import sys
+# JSON Schema de un activo de red
 schema = {
     "type" : "object",
     "properties":{
@@ -16,21 +17,23 @@ schema = {
     },
     "required": ["IP"]
 }
-
+# Funcion para validar el JSON Schema e incluirlo en una lista
 def validate_and_add(item,schema,list):
   validate(item, schema=schema)
   list.append(item)
 
+# Funcion para quedarse con los elementos unicos de una lista
 def unique(list1):
-    # insert the list to the set
+    # Inserta la lista en el set
     list_set = set(list1)
-    # convert the set to the list
+    # Convierte el set en una lista de nuevo
     unique_list = (list(list_set))
     final_list=[]
     for x in unique_list:
         final_list.append(str(np.unique(x))[1:-1].replace("'", ""))
     return final_list
 
+# Funcion para eliminar caracteres sobrantes repetidos
 def cleanname(name):
     name = str(name).replace('""', '')
     name = str(name).replace('""', '')
@@ -39,6 +42,7 @@ def cleanname(name):
     name = str(name).replace(";", '')
     return name
 
+# Funcion para leer el archivo conn.log y extraer las direcciones IP
 def readips(rutatolog):
     reader=open(rutatolog, 'r')
     listahosts = []
@@ -49,9 +53,10 @@ def readips(rutatolog):
     listaips=unique(listahosts)
     return listaips
 
+# Funcion para extraer los servicios de red encontrados en el fichero de known services
 def knownservices(ips,rutatolog):
 
-    #Leemos el json de los known_services
+    # Leemos el json de los known_services
     try:
         reader = open(rutatolog, 'r')
         lines=[]
@@ -67,7 +72,7 @@ def knownservices(ips,rutatolog):
             ipandservice=[]
             for row in lines:
                 if row['host'] == str(x):
-                    if(len(str(row['service']))<100): #Para eliminar basura
+                    if(len(str(row['service']))<100): #Para reducir la longitud
                         serviceslist.append(row['service'][0])
             ipandservice=[x,serviceslist]
             finallist.append(ipandservice)
@@ -81,6 +86,7 @@ def knownservices(ips,rutatolog):
             finallist.append(ipandservice)
         return finallist
 
+# Funcion para extraer los software encontrados en el fichero software
 def software(ips,rutatolog):
     try:
         reader = open(rutatolog, 'r')
@@ -100,11 +106,12 @@ def software(ips,rutatolog):
                 if row['host'] == x:
                     name=row['unparsed_version']
                     name=cleanname(name)
+					# Detectar algun SO gracias al software
                     if ("ubuntu" in str(np.unique(str(row['unparsed_version']))))or ("Ubuntu" in str(np.unique(str(row['unparsed_version'])))) or ("Debian" in str(np.unique(str(row['unparsed_version'])))):
                         oslist.append("Linux")
                     elif ("Windows" in str(np.unique(str(row['unparsed_version'])))):
                         oslist.append("Windows")
-                    if (len(name) < 100):
+                    if (len(name) < 100): # De nuevo para eliminar longitud excesiva
                         softwarelist.append(str(np.unique(name)[0]))
 
             ipsandsoftware=[x,softwarelist]
@@ -123,6 +130,7 @@ def software(ips,rutatolog):
             finallist2.append(ipsandos)
         return finallist, finallist2
 
+# Funcion para extraer los hashes JA3 y JA3S de clientes y servidores SSL
 def ja3reader(ips,rutatolog):
     try:
         reader = open(rutatolog, 'r')
@@ -131,7 +139,7 @@ def ja3reader(ips,rutatolog):
             row = json.loads(line)
             lines.append(row)
 
-        # Para cada una de las lineas, se busca si coincide la IP y se registran los servicios
+        # Para cada una de las lineas, se busca si coincide la IP y se registran los hashes JA3 y JA3S
         finallist=[]
         for x in ips:
 
@@ -142,7 +150,6 @@ def ja3reader(ips,rutatolog):
                     ja3list.append(row['ja3'])
                 if row['id.resp_h']== str(x) and row['established']==True:
                     ja3list.append(row['ja3s'])
-            #print(ja3list)
             ipandja3=[x,unique(ja3list)]
             finallist.append(ipandja3)
         return finallist
@@ -155,6 +162,7 @@ def ja3reader(ips,rutatolog):
             finallist.append(ipandja3)
         return finallist
 
+# Funcion para extraer del fichero de p0f los Sistemas Operativos
 def p0freader(ips,rutatolog):
     try:
         with open(rutatolog) as reader:
@@ -193,6 +201,7 @@ def p0freader(ips,rutatolog):
             finallist.append(ipandos)
         return finallist
 
+# Funcion para realizar busqueda en ja3er y recuperar los User-Agents
 def ja3lookup(ja3fing):
     useragents=[]
     for user in ja3fing:
@@ -203,6 +212,7 @@ def ja3lookup(ja3fing):
                 useragents.append(cleanname(item['User-Agent']))
     return useragents
 
+# Funcion para escribir data.json
 def writedata(rutatolog,data):
     writer=open(rutatolog+"data.json", 'w')
     nlines=0
@@ -234,6 +244,8 @@ ja3 = ja3reader(listaips,dir+'ssl.log')
 p0f = p0freader(listaips,dir+'p0f.log')
 
 network=[]
+
+# Formar los activos y agregarlos a la CMDB en data.json
 for ip in listaips:
     if ip not in ['255.255.255.255','0.0.0.0','::']:
         for dev in listasos:
@@ -268,6 +280,8 @@ for ip in listaips:
 
 writedata(dir,network)
 os.system("cat "+dir+"data.json > "+cwd+"/templates/data.json")
+
+# Uso de brassfork y CSVtoGEXF para obtener el grafo de GEPHI en out.gexf
 tmp = os.popen("ls "+dir+"*.pcap").read()
 command ="./brassfork -nodes="+dir+"nodes.csv -edges="+dir+"edges.csv"+" -in="+tmp
 os.system("cd "+cwd+"&& "+command)
