@@ -81,13 +81,13 @@ active-mapper                  latest              74089d2d20cd        2 minutes
 4. For launching the instance just run the following command
 
 ```buildoutcfg
-docker run -it -p 5000:5000 -u ubuntu active-mapper:latest
+docker run -it -p localhost:5000:5000 -u ubuntu active-mapper:latest
 ```
 
 5. If you want to mount a folder with a pcap directly to the Docker container run
 
 ```buildoutcfg
-docker run -it -p 5000:5000 -u ubuntu -v <Path-to-your-pcap-file>:/home/ubuntu/<name-of-folder-in-container>/ active-mapper:latest
+docker run -it -p localhost:5000:5000 -u ubuntu -v <Path-to-your-pcap-file>:/home/ubuntu/<name-of-folder-in-container>/ active-mapper:latest
 ```
 
 6. Another option is to copy the pcap file using docker cp once the container is running
@@ -111,7 +111,7 @@ Introduce the base directory where the pcap is located:
 
 ```
 
-8. The generated files will be in the path /home/ubuntu/<name-of-folder-in-container>/ and the HTML report will be in localhost:5000
+8. The generated files will be in the path /home/ubuntu/name-of-folder-in-container/ and the HTML report will be in localhost:5000
 
 
 ## TODO
