@@ -18,6 +18,7 @@ Developed by Javier Ortega for the final thesis in Telecommunications Engineerin
 - Quick creation of reports in HTML
 - JSON Output
 - GEXF Representation of the nodes and edges
+- Docker implementation for multi-plattform usage
 
 ## Getting Started
 
@@ -99,6 +100,7 @@ docker cp <Path-to-your-pcap>.pcap <Container-ID>:/home/ubuntu/<name-of-folder-i
 7. Once inside the container, just run the app like in a normal Ubuntu. The app is in /home/ubuntu/
 
 ```buildoutcfg
+$ cd /home/ubuntu/
 $ python3 app.py
     _        _   _
    / \   ___| |_(_)_   _____       _ __ ___   __ _ _ __  _ __   ___ _ __
@@ -118,3 +120,4 @@ Introduce the base directory where the pcap is located:
 - Website for the GEXF
 - Improve the performance of the tool in bigger PCAPs
 - Add real-time analysis
+- Merge and analyse multiple pcaps in the same folder
