@@ -14,6 +14,7 @@ cd ja3/
 sudo cp zeek/* /opt/zeek/share/zeek/site/ja3/
 cd && rm -rf ja3/
 cd $dir
+wget https://ja3er.com/getAllUasJson -O JA3db.json
 sudo chmod +x brassfork
 echo '@load tuning/json-logs' | sudo tee -a /opt/zeek/share/zeek/site/local.zeek
 echo '@load tuning/track-all-assets' | sudo tee -a /opt/zeek/share/zeek/site/local.zeek
