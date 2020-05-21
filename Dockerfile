@@ -24,6 +24,7 @@ RUN pip3 install -r /home/ubuntu/requirements.txt
 
 RUN sudo chmod +x /home/ubuntu/brassfork && \
 	chown -R ubuntu:ubuntu /home/ubuntu/
+RUN sudo mv /JA3db.json /home/ubuntu/
 EXPOSE 5000
 
 ENTRYPOINT ["/bin/bash"]
