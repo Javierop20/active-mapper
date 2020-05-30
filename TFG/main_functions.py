@@ -84,7 +84,7 @@ def knownservices(ips,actives,rutatolog):
 
     # Para cada una de las lineas, se busca si coincide la IP y se registran los servicios
     for line in lines:
-        actives[ips.index(line['host'])].services.append(line['service'][0])
+        actives[line['host']].services.append(line['service'][0])
     return actives
 
 # Funcion para extraer los software encontrados en el fichero software
@@ -100,11 +100,11 @@ def software(ips,actives,rutatolog):
         name=cleanname(name)
         # Detectar algun SO gracias al software
         if ("ubuntu" in str(np.unique(str(row['unparsed_version']))))or ("Ubuntu" in str(np.unique(str(row['unparsed_version'])))) or ("Debian" in str(np.unique(str(row['unparsed_version'])))):
-            actives[ips.index(row['host'])].os.append("Linux")
+            actives[row['host']].os.append("Linux")
         elif ("Windows" in str(np.unique(str(row['unparsed_version'])))):
-            actives[ips.index(row['host'])].os.append("Windows")
+            actives[row['host']].os.append("Windows")
         if (len(name) < 100): # De nuevo para eliminar longitud excesiva
-            actives[ips.index(row['host'])].software.append(name)
+            actives[row['host']].software.append(name)
 
      
     return actives
@@ -121,8 +121,8 @@ def ja3reader(ips,actives,rutatolog):
     
     for row in lines:
         if row['established']==True:
-            actives[ips.index(row['id.orig_h'])].ja3.append(row['ja3'])
-            actives[ips.index(row['id.resp_h'])].ja3.append(row['ja3s'])
+            actives[row['id.orig_h']].ja3.append(row['ja3'])
+            actives[row['id.resp_h']].ja3.append(row['ja3s'])
     return actives
 
 # Funcion para extraer del fichero de p0f los Sistemas Operativos
@@ -140,7 +140,7 @@ def p0freader(ips,actives,rutatolog):
                     if '???' in fields[4]:
                         os=[]
                     else:
-                        actives[ips.index(ip)].os.append(fields[4].split('=')[1])
+                        actives[ip].os.append(fields[4].split('=')[1])
             if fields[3] == 'subj=srv':
                 os = []
                 ip = fields[2].split('=')[1].split('/')[0]
@@ -149,7 +149,7 @@ def p0freader(ips,actives,rutatolog):
                         os = []
 
                     else:
-                        actives[ips.index(ip)].os.append(fields[4].split('=')[1])
+                        actives[ip].os.append(fields[4].split('=')[1])
     return actives
 
 # Funcion para realizar busqueda en la bbdd de ja3er y recuperar los User-Agents
@@ -187,28 +187,30 @@ decision=sys.stdin.readline().strip()
 start_time = time.time()
 os.system("export PATH=/opt/zeek/bin:$PATH && cd "+dir+" && zeek -Cr "+dir+"*.pcap local")
 os.system("p0f -r "+dir+"*.pcap -o "+dir+"p0f.log > /dev/null")
+print("Zeek and p0f finished in %s seconds" % (time.time() - start_time))
 
+start_time = time.time()
 d=readja3(cwd+"/JA3db.json");
 listaips=readips(dir+'conn.log')
-listaactivos=[]
+dictactivos=dict()
 for ip in listaips:    #Se crean todos los activos vacios con solo la IP
     activo = Active(ip,[],[],[],[],[])
-    listaactivos.append(activo)	
+    dictactivos[ip]=activo
 
-listaactivos=knownservices(listaips,listaactivos,dir+'known_services.log')
-listaactivos=software(listaips,listaactivos,dir+'software.log')
-listaactivos=ja3reader(listaips,listaactivos,dir+'ssl.log')
-listaactivos=p0freader(listaips,listaactivos,dir+'p0f.log')
-print("Finished reading files in %s seconds" % (time.time() - start_time))
+dictactivos=knownservices(listaips,dictactivos,dir+'known_services.log')
+dictactivos=software(listaips,dictactivos,dir+'software.log')
+dictactivos=ja3reader(listaips,dictactivos,dir+'ssl.log')
+dictactivos=p0freader(listaips,dictactivos,dir+'p0f.log')
+print("Finished reading and parsing files in %s seconds" % (time.time() - start_time))
 start_time = time.time()
-for activo in listaactivos:
+for activo in dictactivos.values():
     users=[]
     activo.ja3 = unique(activo.ja3)
     activo.useragents=ja3lookup(activo.ja3,d)
 print("Finished the ja3 lookup in %s seconds" % (time.time() - start_time))
  
 start_time = time.time()
-for activo in listaactivos:
+for activo in dictactivos.values():
     activo.os=unique(activo.os)
     activo.services=unique(activo.services)
     activo.software=unique(activo.software)
@@ -218,7 +220,7 @@ print("Finished getting the unique data in %s seconds" % (time.time() - start_ti
 start_time = time.time()
 
 # Formar los activos y agregarlos a la CMDB en data.json
-for activo in listaactivos:
+for activo in dictactivos.values():
     active={
         "IP":activo.ip,
         "OS":activo.os,
@@ -229,7 +231,7 @@ for activo in listaactivos:
     }
     if activo.ip not in ['255.255.255.255','0.0.0.0','::']:
         validate_and_add(active,schema,network)
-print("Finished validating the JSON in %s segundos" % (time.time() - start_time))
+print("Finished validating the JSON in %s seconds" % (time.time() - start_time))
 
 writedata(dir,network)
 os.system("cat "+dir+"data.json > "+cwd+"/templates/data.json")
