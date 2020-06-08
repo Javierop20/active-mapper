@@ -184,6 +184,8 @@ print("Introduce the base directory where the pcap is located: ")
 dir=sys.stdin.readline().strip()
 print("Do you want to create the graph associated to the pcap? [y/n] (default n)")
 decision=sys.stdin.readline().strip()
+print("Do you want to validate the JSON Schema? [y/n] (default n)")
+validate_decision=sys.stdin.readline().strip()
 start_time = time.time()
 os.system("export PATH=/opt/zeek/bin:$PATH && cd "+dir+" && zeek -Cr "+dir+"*.pcap local")
 os.system("p0f -r "+dir+"*.pcap -o "+dir+"p0f.log > /dev/null")
@@ -230,8 +232,11 @@ for activo in dictactivos.values():
         "Possible User-Agent":activo.useragents
     }
     if activo.ip not in ['255.255.255.255','0.0.0.0','::']:
-        validate_and_add(active,schema,network)
-print("Finished validating the JSON in %s seconds" % (time.time() - start_time))
+        if validate_decision in ['y','Y']:
+            validate_and_add(active,schema,network)
+        else:
+            network.append(active)
+print("Finished adding the JSON in %s seconds" % (time.time() - start_time))
 
 writedata(dir,network)
 os.system("cat "+dir+"data.json > "+cwd+"/templates/data.json")
